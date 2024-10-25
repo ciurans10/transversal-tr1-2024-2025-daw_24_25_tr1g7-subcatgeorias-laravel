@@ -1,0 +1,117 @@
+<div>
+    <nav class="bg-custom-gradient navbar shadow-lg">
+        <div class="d-flex w-100 align-items-center" style="height: 100%">
+            <div class="w-100 mx-4 d-flex align-items-center" style="height: 100%">
+                <div class="row w-100" style="height: 80%">
+                    <div class="col-lg-1" style=" height: 70px">
+                        <div class="container-img w-100" style="height: 100%">
+                            <img class="img-fluid"
+                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_J64H9TeNc_w3Oo8fZ9vWpn8jLVG9bO9toQ&s"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-11 d-flex align-items-center" style="">
+                        <div class="d-flex justify-content-between w-100" style="">
+                            <button @click="categoryMenu = !categoryMenu" class="btn">
+                                <i class="bi bi-list text-white me-2"></i>
+                                <span class="text-white">Categorias</span>
+                            </button>
+                            <div class="" style="width: 70%; height: 33px;">
+                                <input aria-describedby="basic-addon1" aria-label="Buscar" class="form-control w-100"
+                                       placeholder="Buscar"
+                                       style="height: 100%;"
+                                       type="text">
+                            </div>
+                            <button class="btn text-white">
+                                nombre user
+                            </button>
+                            <button @click="categoryCarrito = !categoryCarrito" class="btn text-white"><i class="bi bi-cart"></i>
+                                <sup class="bg-danger py-1 px-2 m-0 rounded-full">{{ productsCart.reduce((total, product) => total + (product.num_product), 0) }}</sup>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--lateral izquierdo-->
+    <div class="w-100 position-fixed top-0 start-0 bg-opacity" style="z-index: 1000;height: 100vh;"
+         v-if="categoryMenu" @click="categoryMenu = !categoryMenu">
+        <div class="w-25 bg-white px-4 py-3" @click.stop style="height: 100%;">
+            <div class="d-flex justify-content-between mb-4">
+                <p class="m-0 fs-4 fw-bold">Todas las categorías</p>
+                <button class=" btn btn-sm m-0 fs-5 " @click="categoryMenu = !categoryMenu"><i class="bi bi-x fw-bold"></i></button>
+            </div>
+            <div class="h-100 d-grid gap-2" style="max-height:93vh;">
+                <a href="javascript:;" class="text-decoration-none text-black fs-5 d-flex justify-content-between mb-3 link-primary">
+                    <div>
+                        <i class="bi bi-cpu"></i> Componentes
+                    </div>
+                    <div>
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!--lateral derecho-->
+    <div class="w-100 position-fixed top-0 d-flex justify-content-end bg-opacity" style="z-index: 1000;height: 100vh;"
+         v-if="categoryCarrito" @click="categoryCarrito = !categoryCarrito">
+        <div @click.stop class="bg-white px-4 py-3 d-flex flex-column justify-content-between" style=" height: 100%; width: 30%;">
+            <div class="d-flex justify-content-between mb-4">
+                <p class="m-0 fs-5 fw-bold">Mi cesta</p>
+                <button class=" btn btn-sm m-0 fs-5 " @click="categoryCarrito = !categoryCarrito"><i class="bi bi-x fw-bold"></i></button>
+            </div>
+            <div v-if="productsCart.length > 0" class="overflow-auto h-100" style="max-height: 70vh;">
+                <div class="">
+                    <div class="card border-none border-bottom mb-4" v-for="(product, index) in productsCart" :key="index">
+                        <div class="card-body p-0">
+                            <div class="row">
+                                <div class="col-lg-3 container-img">
+                                    <img class="img-fluid" :src="product.image_path"/>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-12">
+                                            <p class="m-0 fs-6 fw-normal">{{product.name}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-12">
+                                            <p class="m-0 fs-5 fw-bold">{{product.price}} €</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-12">
+                                            <p class="m-0 fs-7 fw-normal">Unidades: <span class="fw-semibold">{{product.num_product}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button class="btn btn-sm"><i class="bi bi-trash3 text-danger"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           <div v-if="productsCart.length == 0"  style="max-height: 70vh;" class="overflow-auto h-100">
+               <p class="m-0 fs-7">No hay articulos en la cesta</p>
+           </div>
+
+            <div class="w-100 border-top pt-2" style="margin-bottom: 40px">
+                <div class="d-flex justify-content-between mb-3">
+                    <p class="m-0 fs-6">Unidades</p>
+                    <p class="fs-6 fw-bold m-0">{{ productsCart.reduce((total, product) => total + (product.num_product), 0) }}</p>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <p class="m-0 fs-6">Total (IVA incluido)</p>
+                    <p class="fs-6 fw-bold m-0">{{ productsCart.reduce((total, product) => total + (product.price * product.num_product), 0).toFixed(2) }}  €</p>
+                </div>
+                <button class="btn btn-primary w-100 btn-lg" @click="goToCart">Ver artículos en tu cesta</button>
+            </div>
+        </div>
+    </div>
+</div>
